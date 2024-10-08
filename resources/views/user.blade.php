@@ -62,6 +62,47 @@
         </div>
     </section>
 
+
+    <section class="h-[80px]" style="background-image: url({{ asset('images/our-story.png') }});">
+        <div class="relative h-14">
+            <h1
+                class="lg:mt-[80px] lg:items-center absolute inset-0 flex items-center justify-center lg:justify-center font-nakilla font-bold text-5xl lg:text-6xl text-green-900 z-10">
+                Our Story
+            </h1>
+        </div>
+    </section>
+
+    <section class="mx-6 my-10 lg:py-6 lg:px-24 bg-white">
+        <div class="flex flex-col lg:flex-row gap-5 align-middle items-center mt-6 lg:mt-[50px]">
+            <div class="relative w-full flex justify-center">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-white/100 rounded-lg">
+                </div>
+                <img width="450" class="h-[400px] rounded-lg object-cover"
+                    src="{{ asset('images/asturo_story.jpg') }}" alt="">
+            </div>
+
+            <div class="w-full flex justify-center">
+                <p class="text-justify font-plus-jakarta text-lg">
+                    Established in 2018, Asturo Coffee is a passionate coffee startups aiming to brew the best specialty
+                    coffee for our customer. As our name derived from the word forest, we aim to grow fast, strong, tall
+                    and bring life to our surrounding. We want our existence to increase coffee quality for our
+                    community.
+                    <br><br><br>
+                    Leveraging network and experience, we are using the latest tech for our tools and bean blend.
+                    Directly from the selected farmer, high-quality beans are processed and roasted to perfection by
+                    ourselves then passed on to our skilled barista, excitedly prepare the cup of happiness to be served
+                    to you especially.
+                </p>
+            </div>
+        </div>
+        <div class="flex justify-center lg:justify-center mt-5 lg:mt-14">
+            <a href="#" class="bg-green-800 px-10 py-4 rounded-full font-full-jakarta text-md text-white">Read
+                More</a>
+        </div>
+    </section>
+
+
+
 </body>
 
 </html>
