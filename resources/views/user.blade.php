@@ -13,7 +13,8 @@
 </head>
 
 <body>
-    <header class="flex justify-between px-5 lg:px-14 h-[10vh] align-middle items-center bg-white border-b-0 top-0">
+    <header
+        class="flex justify-between px-5 lg:px-14 h-[10vh] align-middle items-center bg-white border-b-0 top-0 sticky">
         <img width="150" src="{{ asset('images/logo.png') }}" alt="">
         <nav class="items-center h-full align-middle gap-10 lg:flex hidden">
             <div>
@@ -72,8 +73,8 @@
         </div>
     </section>
 
-    <section class="mx-6 my-10 lg:py-6 lg:px-24 bg-white">
-        <div class="flex flex-col lg:flex-row gap-5 align-middle items-center mt-6 lg:mt-[50px]">
+    <section class="mx-6 my-10 lg:my-16 lg:mx-28 bg-white">
+        <div class="flex flex-col lg:flex-row gap-5 align-middle items-center mt-6">
             <div class="relative w-full flex justify-center">
                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-white/100 rounded-lg">
                 </div>
@@ -101,7 +102,26 @@
         </div>
     </section>
 
-
+    <section class="flex flex-col bg-cover lg:px-14 lg:py-16 bg-center "
+        style="background-image: url({{ asset('images/bg-top.png') }});">
+        <div class="flex flex-col lg:flex-row lg:justify-evenly lg:my-14 align-middle items-center">
+            <h1 class="mt-4 lg:mt-0 text-4xl lg:text-6xl font-plus-jakarta font-semibold text-green-800">Asturo Galery
+            </h1>
+            <h2 class="font-plus-jakarta text-1xl lg:text-2xl py-2 text-center text-black">Get the latest updates and
+                <br> more
+                coffee
+                experience
+                from us!
+            </h2>
+        </div>
+        <div class="m-6 grid grid-cols-6 gap-6 lg:items-center lg:mx-40">
+            <img class="w-full col-span-6 rounded-lg" src="{{ asset('images/foto_one.jpeg') }}" alt="">
+            <img class="w-full col-span-6 lg:col-span-3 rounded-lg" src="{{ asset('images/foto_two.jpg') }}"
+                alt="">
+            <img class="w-full col-span-6 lg:col-span-3 rounded-lg" src="{{ asset('images/foto_three.jpg') }}"
+                alt="">
+        </div>
+    </section>
 
 </body>
 
