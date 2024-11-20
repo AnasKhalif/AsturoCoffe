@@ -21,7 +21,7 @@
                 tara!.</p>
             <div class="flex">
                 <a class=" font-plus-jakarta bg-[#cfc7be] text-white px-5 py-2 rounded-full mt-5 text-sm" href="/services">
-                    See Services
+                    See Menu
                 </a>
             </div>
         </div>
