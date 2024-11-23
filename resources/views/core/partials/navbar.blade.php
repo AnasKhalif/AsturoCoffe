@@ -6,11 +6,11 @@
                 class="border-b-2 {{ request()->is('/') ? 'border-black' : 'border-transparent' }}">Home</a>
         </div>
         <div>
-            <a href=""
+            <a href="{{ route('about') }}"
                 class="border-b-2 hover:border-black {{ request()->is('about') ? 'border-black' : 'border-transparent' }} transition-all ease-out duration-300">About</a>
         </div>
         <div>
-            <a href=""
+            <a href="{{ route('menu') }}"
                 class="border-b-2 hover:border-black {{ request()->is('menu') ? 'border-black' : 'border-transparent' }} transition-all ease-out duration-300">Menu</a>
         </div>
         <div>
@@ -19,8 +19,9 @@
         </div>
     </nav>
     <div class="lg:flex items-center hidden">
-        <a href="" class="flex items-center justify-center w-8 h-8 " target="blank">
-            <img src="/icon/instagram.svg" alt="instagram">
+        <a href="#"
+            class="px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-all ease-out duration-300">
+            Login
         </a>
     </div>
 </header>
