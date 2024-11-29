@@ -19,7 +19,7 @@
         </div>
     </nav>
     <div class="lg:flex items-center hidden">
-        <a href="#"
+        <a href="{{ route('login') }}"
             class="px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-all ease-out duration-300">
             Login
         </a>
