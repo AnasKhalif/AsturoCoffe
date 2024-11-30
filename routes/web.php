@@ -31,6 +31,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::name('admin.')->prefix('admin')->namespace('App\Http\Controllers\Admin')->middleware(['auth', 'role:superadmin'])->group(function () {
+    Route::resource('permission', 'PermissionController');
+    Route::resource('role', 'RoleController');
+});
+
 Route::resource('series', SeriesController::class)->middleware('auth');
 Route::resource('menus', MenuController::class)->middleware('auth');
 
