@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeriesController;
+use App\Http\Controllers\MenuController;
 
 Route::get('/', function () {
     return view('user.index');
@@ -31,5 +32,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('series', SeriesController::class)->middleware('auth');
+Route::resource('menus', MenuController::class)->middleware('auth');
 
 require __DIR__ . '/auth.php';
