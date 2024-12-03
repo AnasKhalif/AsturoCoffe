@@ -10,8 +10,14 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $menus = Menu::with('series')->get();
-        return view('menu.index', compact('menus'));
+        $user = request()->user();;
+
+        if ($user->hasRole('superadmin') || $user->isAbleTo('menu-read')) {
+            $menus = Menu::with('series')->get();
+            return view('menu.index', compact('menus'));
+        } else {
+            return redirect()->route('dashboard');
+        }
     }
 
     public function create()
@@ -48,9 +54,22 @@ class MenuController extends Controller
 
     public function edit($id)
     {
-        $menu = Menu::findOrFail($id);
-        $series = Series::all();
-        return view('menu.edit', compact('menu', 'series'));
+
+        try {
+            $menu = Menu::findOrFail($id);
+            $series = Series::all();
+
+            if (
+                request()->user()->hasRole('superadmin') ||
+                request()->user()->isAbleTo('menu-update', $menu)
+            ) {
+                return view('menu.edit', compact('menu', 'series'));
+            } else {
+                return redirect()->route('menus.index');
+            }
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('menu.index');
+        }
     }
 
     public function update(Request $request, $id)
@@ -72,5 +91,27 @@ class MenuController extends Controller
 
         $menu->update($validatedMenus);
         return redirect()->route('menus.index');
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $menu = Menu::findOrFail($id);
+
+            $user = request()->user();
+            if ($user->hasRole('superadmin') || $user->isAbleTo('menu-delete', $menu)) {
+                if ($menu->image) {
+                    \Storage::disk('public')->delete($menu->image);
+                }
+
+                $menu->delete();
+
+                return redirect()->route('menus.index')->with('success', 'Menu deleted successfully.');
+            } else {
+                return redirect()->route('menus.index')->with('error', 'You do not have permission to delete this menu.');
+            }
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('menus.index')->with('error', 'Menu not found.');
+        }
     }
 }

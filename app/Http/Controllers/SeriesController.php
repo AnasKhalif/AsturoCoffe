@@ -4,13 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Series;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Laratrust\Traits\HasRolesAndPermissions;
 
 class SeriesController extends Controller
 {
     public function index()
     {
-        $series = Series::all();
-        return view('series.index', compact('series'));
+        $user = request()->user();
+
+        if ($user->hasRole('superadmin') || $user->isAbleTo('seri-read')) {
+            $series = Series::all();
+            return view('series.index', compact('series'));
+        } else {
+            return redirect()->route('dashboard');
+        }
     }
 
     public function create()
@@ -30,25 +38,67 @@ class SeriesController extends Controller
 
     public function edit($id)
     {
-        $series = Series::findOrFail($id);
-        return view('series.edit', compact('series'));
+
+        try {
+            $series = Series::findOrFail($id);
+
+
+            if (
+                request()->user()->hasRole('superadmin') ||
+                request()->user()->isAbleTo('seri-update', $series)
+            ) {
+                return view('series.edit', compact('series'));
+            } else {
+                return redirect()->route('series.index');
+            }
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('series.index');
+        }
     }
 
     public function update(Request $request, $id)
     {
-        $validatedSeries = $request->validate([
-            'name' => 'required|max:255',
-        ]);
 
-        $series = Series::findOrFail($id);
-        $series->update($validatedSeries);
-        return redirect()->route('series.index');
+        try {
+            $series = Series::findOrFail($id);
+
+            if (
+                request()->user()->hasRole(['superadmin']) ||
+                request()->user()->isAbleTo('seri-update', $series) ||
+                $series->user_id === request()->user()->id
+            ) {
+                $validatedSeries = $request->validate([
+                    'name' => 'required|max:255',
+                ]);
+
+                $series->update($validatedSeries);
+
+                return redirect()->route('series.index');
+            } else {
+                return redirect()->route('series.index');
+            }
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('series.index');
+        }
     }
 
     public function destroy($id)
     {
-        $series = Series::findOrFail($id);
-        $series->delete();
-        return redirect()->route('series.index');
+        try {
+            $series = Series::findOrFail($id);
+
+            if (
+                request()->user()->hasRole(['superadmin']) ||
+                request()->user()->isAbleTo('seri-delete', $series) ||
+                $series->user_id === request()->user()->id
+            ) {
+                $series->delete();
+                return redirect()->route('series.index');
+            } else {
+                return redirect()->route('series.index');
+            }
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('series.index');
+        }
     }
 }

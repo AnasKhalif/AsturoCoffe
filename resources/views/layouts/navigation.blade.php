@@ -31,16 +31,18 @@
                         {{ __('Payment') }}
                     </x-nav-link>
                 </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.permission.index')" :active="request()->routeIs('admin.permission.index')">
-                        {{ __('Permission') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.role.index')" :active="request()->routeIs('admin.role.index')">
-                        {{ __('Role') }}
-                    </x-nav-link>
-                </div>
+                @role('superadmin')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('admin.permission.index')" :active="request()->routeIs('admin.permission.index')">
+                            {{ __('Permission') }}
+                        </x-nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('admin.role.index')" :active="request()->routeIs('admin.role.index')">
+                            {{ __('Role') }}
+                        </x-nav-link>
+                    </div>
+                @endrole
             </div>
 
             <!-- Settings Dropdown -->
