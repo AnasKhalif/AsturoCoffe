@@ -19,9 +19,21 @@
         </div>
     </nav>
     <div class="lg:flex items-center hidden">
-        <a href="{{ route('login') }}"
-            class="px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-all ease-out duration-300">
-            Login
-        </a>
+        @auth
+
+            <form action="{{ route('logout') }}" method="POST" class="inline-block">
+                @csrf
+                <button type="submit"
+                    class="px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-all ease-out duration-300">
+                    Logout
+                </button>
+            </form>
+        @else
+            <a href="{{ route('login') }}"
+                class="px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-all ease-out duration-300">
+                Login
+            </a>
+        @endauth
     </div>
+
 </header>
