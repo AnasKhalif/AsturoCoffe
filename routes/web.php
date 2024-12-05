@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     return view('user.index');
@@ -13,9 +14,11 @@ Route::get('/about', function () {
     return view('user.about');
 })->name('about');
 
-Route::get('/menu', function () {
-    return view('user.menu');
-})->name('menu');
+Route::get('/menu', [OrderController::class, 'index'])->name('menu');
+Route::get('/menu/{id}', [OrderController::class, 'show'])->name('menu.show');
+Route::post('/menu/payment', [OrderController::class, 'storePayment'])->name('menu.payment');
+Route::post('/midtrans/callback', [OrderController::class, 'midtransCallback'])->name('midtrans.callback');
+
 
 Route::get('/contact', function () {
     return view('user.contact');
@@ -23,7 +26,7 @@ Route::get('/contact', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified', 'role:admin,super_admin'])->name('dashboard');
+})->middleware(['auth', 'verified', 'role:admin|superadmin'])->name('dashboard');
 
 
 Route::middleware('auth')->group(function () {
