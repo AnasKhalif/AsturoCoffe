@@ -31,25 +31,25 @@ class Order extends Model
 
     public function setStatusPending()
     {
-        $this->attributes['status'] = 'pending';
-        self::save();
+        $this->status = 'pending';
+        $this->save();
     }
 
     public function setStatusSuccess()
     {
-        $this->attributes['status'] = 'success';
-        self::save();
+        $this->status = 'success';
+        $this->save();
     }
 
     public function setStatusFailed()
     {
-        $this->attributes['status'] = 'failed';
-        self::save();
+        $this->status = 'failed';
+        $this->save();
     }
 
     public function setStatusExpired()
     {
-        $this->attributes['status'] = 'expired';
-        self::save();
+        $this->status = 'expired';
+        $this->save();
     }
 }

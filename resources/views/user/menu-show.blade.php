@@ -81,7 +81,7 @@
         payButton.addEventListener('click', function(e) {
             e.preventDefault();
 
-            fetch('{{ route('menu.payment') }}', {
+            fetch('/menu/payment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -92,7 +92,17 @@
                         quantity: quantity
                     })
                 })
-                .then(response => response.json())
+                .then(response => {
+                    // Log the response to see if it's HTML or JSON
+                    return response.text().then(text => {
+                        console.log('Response:', text);
+                        try {
+                            return JSON.parse(text); // Attempt to parse the response as JSON
+                        } catch (e) {
+                            throw new Error('Invalid JSON response');
+                        }
+                    });
+                })
                 .then(data => {
                     if (data.snap_token) {
                         snap.pay(data.snap_token, {

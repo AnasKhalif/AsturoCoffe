@@ -7,6 +7,12 @@ use Illuminate\Support\Str;
 use App\Models\Series;
 use App\Models\Menu;
 use App\Models\Order;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Midtrans\Notification;
+use Midtrans\Config;
+
 
 class OrderController extends Controller
 {
@@ -25,6 +31,12 @@ class OrderController extends Controller
         return view('user.menu', compact('series', 'menus'));
     }
 
+    public function payment()
+    {
+        $order = Order::orderBy('id', 'DESC')->paginate(8);
+        return view('payment.index', compact('order'));
+    }
+
     public function show($id)
     {
         $menu = Menu::find($id);
@@ -33,30 +45,24 @@ class OrderController extends Controller
 
     public function storePayment(Request $request)
     {
-        $request->validate([
-            'menu_id' => 'required|exists:menus,id',
-            'quantity' => 'required|integer|min:1',
-        ]);
 
         $menu = Menu::findOrFail($request->menu_id);
 
-
-        $orderCode = Str::upper(Str::random(10));
         $totalPrice = $menu->price * $request->quantity;
 
 
         $order = Order::create([
-            'order_code' => $orderCode,
+            'order_code' => 'order-' . uniqid(),
             'menu_id' => $menu->id,
-            'user_id' => auth()->id(),
+            // 'user_id' => Auth::id(),
+            'user_id' => 5,
             'quantity' => $request->quantity,
             'total_price' => $totalPrice,
-            'status' => 'pending',
         ]);
 
 
         $transactionDetails = [
-            'order_id' => $order->id,
+            'order_id' => $order->order_code,
             'gross_amount' => $totalPrice,
         ];
 
@@ -101,35 +107,37 @@ class OrderController extends Controller
 
     public function midtransCallback(Request $request)
     {
-        $json = json_decode($request->getContent(), true);
+        Log::info('Midtrans Callback Data:', $request->all());
 
-        $orderId = $json['order_id'];
-        $transactionStatus = $json['transaction_status'];
+        // Inisialisasi Midtrans Notification
+        $notification = new Notification();
 
-        $order = Order::find($orderId);
+        // Ambil data dari notifikasi
+        $order_id = $notification->order_id;
+        $transaction_status = $notification->transaction_status;
+        $fraud_status = $notification->fraud_status;
 
-        if (!$order) {
-            return response()->json(['error' => 'Order not found'], 404);
-        }
+        // Cari order berdasarkan order_code
+        $order = Order::where('order_code', $order_id)->first();
 
-        DB::beginTransaction();
-
-        try {
-            if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
-                $order->setStatusSuccess();
-            } elseif ($transactionStatus == 'pending') {
-                $order->setStatusPending();
-            } elseif ($transactionStatus == 'deny' || $transactionStatus == 'cancel') {
-                $order->setStatusFailed();
-            } elseif ($transactionStatus == 'expire') {
-                $order->setStatusExpired();
+        if ($order) {
+            // Update status berdasarkan status transaksi
+            if ($transaction_status == 'capture' || $transaction_status == 'settlement') {
+                if ($fraud_status == 'accept') {
+                    $order->setStatusSuccess();  // Update status order ke success
+                } else {
+                    $order->setStatusPending();  // Jika fraud status tidak diterima
+                }
+            } else if ($transaction_status == 'cancel' || $transaction_status == 'deny') {
+                $order->setStatusFailed();  // Update status ke failed
+            } else if ($transaction_status == 'expire') {
+                $order->setStatusExpired();  // Update status ke expired
             }
-
-            DB::commit();
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            // Simpan perubahan
+            $order->save();
         }
+
+        // Return response success
+        return response()->json(['status' => 'success']);
     }
 }

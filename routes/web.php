@@ -16,8 +16,9 @@ Route::get('/about', function () {
 
 Route::get('/menu', [OrderController::class, 'index'])->name('menu');
 Route::get('/menu/{id}', [OrderController::class, 'show'])->name('menu.show');
+
+#PAYMENT
 Route::post('/menu/payment', [OrderController::class, 'storePayment'])->name('menu.payment');
-Route::post('/midtrans/callback', [OrderController::class, 'midtransCallback'])->name('midtrans.callback');
 
 
 Route::get('/contact', function () {
@@ -41,6 +42,7 @@ Route::name('admin.')->prefix('admin')->namespace('App\Http\Controllers\Admin')-
     Route::resource('role', 'RoleController');
 });
 
+Route::get('payment', [OrderController::class, 'payment'])->name('payment');
 Route::resource('series', SeriesController::class)->middleware('auth');
 Route::resource('menus', MenuController::class)->middleware('auth');
 
